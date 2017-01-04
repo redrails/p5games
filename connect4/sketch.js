@@ -55,6 +55,24 @@ function draw() {
     fill(0);
     stroke(255);
     strokeWeight(2);
+    
+    checkWinState(p1);
+    if(won == p1){
+        fill(won.colour);
+        noStroke();
+        textSize(72);
+        text(won.name + " wins!",width/4,height/2);
+        return;
+    }
+    checkWinState(p2);
+    if(won == p2){
+        fill(won.colour);
+        noStroke();
+        textSize(72);
+        text(won.name + " wins!",width/4,height/2);
+        return;
+    }
+
     for (var i = 0; i < 10; i++) {
         for (var j = 0; j < 10; j++) {
             fill(100);
@@ -68,20 +86,12 @@ function draw() {
         }
     }
     
-    checkWinState()
-    if(won == p1){
-        fill(255);
-        text("p1 wins!",510,150)
-    }
-    
     statusBoard();
 }
 
-function checkWinState() {
-    var checking = p1;
+function checkWinState(checking) {
     won = null;
-    var inarow = 0;
-
+    
     for (var i = 0; i < slots.length; i++) {
         for(var j = 0; j<slots[i].length-4; j++){
             if(
@@ -95,10 +105,23 @@ function checkWinState() {
 
         }
     }
-    return null;
+    for(var i=0; i<slots.length; i++){
+        for(var j=0; j<slots[i].length; j++){
+            if(
+                slots[i][j].filledColor   == checking.colour &&
+                slots[i+1][j].filledColor == checking.colour &&
+                slots[i+2][j].filledColor == checking.colour &&
+                slots[i+3][j].filledColor == checking.colour
+            ){
+                won = checking;
+            }
+        }
+    }
+    
 }
 
 function dropCounter(col) {
+
     for (var i = slots[col].length - 1; i >= 0; i--) {
         if (slots[col][i].filled) {
             continue;
