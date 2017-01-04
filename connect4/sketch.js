@@ -1,15 +1,16 @@
 var turn;
-var slots = new Array(10);
+var slots;
 var p1;
 var p2;
+var won;
 
-var Player = function(name, colour){
+var Player = function(name, colour) {
     this.name = name;
     this.colour = colour;
 }
 
-var Slot = function(X, Y, W, H, dropMatrix){
-    
+var Slot = function(X, Y, W, H, dropMatrix) {
+
     this.X = X;
     this.Y = Y;
     this.W = W;
@@ -17,13 +18,13 @@ var Slot = function(X, Y, W, H, dropMatrix){
     this.filled = false;
     this.filledColor = null;
     this.dropMatrix = dropMatrix;
-    
-    this.Fill = function(colour){
+
+    this.Fill = function(player) {
         this.filled = true;
-        this.filledColor = colour;
+        this.filledColor = player.colour;
     }
-    this.draw = function(){
-        if(this.filled){
+    this.draw = function() {
+        if (this.filled) {
             fill(this.filledColor);
         } else {
             fill(200);
@@ -33,19 +34,19 @@ var Slot = function(X, Y, W, H, dropMatrix){
 }
 
 function setup() {
-    createCanvas(800,500);
-    
-    for(var i=0; i<10; i++){
+    createCanvas(800, 500);
+    slots = new Array(10);
+    for (var i = 0; i < 10; i++) {
         slots[i] = new Array(10);
-        for(var j=0; j<10; j++){
-            slots[i][j]= new Slot(i*50+25, j*50+25, 30, 30);
+        for (var j = 0; j < 10; j++) {
+            slots[i][j] = new Slot(i * 50 + 25, j * 50 + 25, 30, 30);
         }
     }
     textSize(32);
-    p1 = new Player("Player 1", color(255,0,0));
-    p2 = new Player("Player 2", color(0,0,255));
+    p1 = new Player("Player 1", color(255, 0, 0));
+    p2 = new Player("Player 2", color(0, 0, 255));
     turn = p1;
-    
+
 }
 
 
@@ -54,44 +55,77 @@ function draw() {
     fill(0);
     stroke(255);
     strokeWeight(2);
-    for(var i=0; i<10; i++){
-        for(var j=0; j<10; j++){
+    for (var i = 0; i < 10; i++) {
+        for (var j = 0; j < 10; j++) {
             fill(100);
-            rect(i*50, j*50, 50, 50);
+            rect(i * 50, j * 50, 50, 50);
             fill(200);
         }
     }
-    for(var i=0; i<slots.length; i++){
-        for(var j=0; j<slots[i].length; j++){
+    for (var i = 0; i < slots.length; i++) {
+        for (var j = 0; j < slots[i].length; j++) {
             slots[i][j].draw();
         }
     }
+    
+    checkWinState()
+    if(won == p1){
+        fill(255);
+        text("p1 wins!",510,150)
+    }
+    
     statusBoard();
 }
 
-function dropCounter(col){
-    for(var i=slots[col].length-1; i>=0; i--){
-        if(slots[col][i].filled){
+function checkWinState() {
+    var checking = p1;
+    won = null;
+    var inarow = 0;
+
+    for (var i = 0; i < slots.length; i++) {
+        for(var j = 0; j<slots[i].length-4; j++){
+            if(
+                slots[i][j].filledColor   == checking.colour &&
+                slots[i][j+1].filledColor == checking.colour &&
+                slots[i][j+2].filledColor == checking.colour &&
+                slots[i][j+3].filledColor == checking.colour
+            ){
+                won = checking;
+            }
+
+        }
+    }
+    return null;
+}
+
+function dropCounter(col) {
+    for (var i = slots[col].length - 1; i >= 0; i--) {
+        if (slots[col][i].filled) {
             continue;
         } else {
-            slots[col][i].Fill(turn.colour);
+            slots[col][i].Fill(turn);
             break;
         }
     }
+
 }
 
-function statusBoard(){
+function statusBoard() {
     fill(255);
     noStroke();
     text("Current Turn:", 510, 50);
     fill(turn.colour);
-    text(turn.name,510,80);
-    
+    text(turn.name, 510, 80);
+
 }
 
-function keyPressed(){
-
-    switch(keyCode){
+function keyPressed() {
+    
+    if(won !== null){
+        return;
+    }
+    
+    switch (keyCode) {
         case 49:
             dropCounter(0);
             break;
@@ -123,7 +157,7 @@ function keyPressed(){
             dropCounter(9);
             break;
     }
-    if(turn == p1){
+    if (turn == p1) {
         turn = p2;
     } else {
         turn = p1;
