@@ -118,6 +118,17 @@ function checkWinState(checking) {
         }
     }
     
+    for(var i=0; i<slots.length; i++){
+        if(
+            slots[i][i].filledColor == checking.colour &&
+            slots[i+1][i+1].filledColor == checking.colour &&
+            slots[i+2][i+2].filledColor == checking.colour &&
+            slots[i+3][i+3].filledColor == checking.colour
+        ){
+            won = checking;
+        }
+    }
+    
 }
 
 function dropCounter(col) {
