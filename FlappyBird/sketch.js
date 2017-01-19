@@ -43,10 +43,10 @@ var Ball = function(X, Y, W, H){
  * Creates an instance of the wall object
  * 
  * @constructor
- * @param {number} X The X value of the ball
- * @param {number} Y The Y value of the ball
- * @param {number} W The width of the ball
- * @param {number} H The height of the ball
+ * @param {number} X The X value of the wall
+ * @param {number} Y The Y value of the wall
+ * @param {number} W The width of the wall
+ * @param {number} H The height of the wall
  * 
  */
 var Wall = function(X, Y, W, H){
