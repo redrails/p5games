@@ -29,7 +29,7 @@ var Bird = function(X, Y, W, H){
     this.Y = Y;
     this.W = W;
     this.H = H;
-    this.img = loadImage("bird.png"); // Load the bird image
+    this.img = loadImage("images/bird.png"); // Load the bird image
     
     // The draw function is to draw the Bird each frame in the canvas.
     this.draw = function(){
@@ -62,8 +62,8 @@ var Wall = function(X, Y, W, H, type){
     this.W = W;
     this.H = H;
     this.type = type;
-    this.topPipe = loadImage("topPipe.png");        // Image for the top pipe
-    this.bottomPipe = loadImage("bottomPipe.png");  // Image for the bottom pipe
+    this.topPipe = loadImage("images/topPipe.png");        // Image for the top pipe
+    this.bottomPipe = loadImage("images/bottomPipe.png");  // Image for the bottom pipe
     
     // Velocity of the moving wall, this must be a constant value across the game, possibly can be altered to be
     // changed when the game gets more difficult.
@@ -140,9 +140,9 @@ function restart(){
 function setup() {
     createCanvas(600,400);
     angleMode(DEGREES);
-    bg = loadImage("bg.png");         // Images need to be loaded prior to game starting
-    gbg = loadImage("gameover.png");  // ^^
-    wbg = loadImage("gameWon.jpg");   // ^^
+    bg = loadImage("images/bg.png");         // Images need to be loaded prior to game starting
+    gbg = loadImage("images/gameover.png");  // ^^
+    wbg = loadImage("images/gameWon.jpg");   // ^^
     
     gameIsOver = false; // Starting value of the game over is false.
     gameWon = false; // Starting value of winning state is false.
