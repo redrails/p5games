@@ -6,13 +6,13 @@ var Ball = function(X, Y, R){
     this.X = X;
     this.Y = Y;
     this.R = R;
-    this.xvelocity = 4;
-    this.yvelocity = -4;
+    this.xvelocity = 8;
+    this.yvelocity = -8;
     
     this.move = function(hitting){
-        if(this.X > width || this.X < 0 || hitting){
+        if(this.X > width || this.X < 0 || hitting === true){
             this.xvelocity *= -1;
-        } else if(this.Y > height || this.Y < 0 || hitting){
+        } else if(this.Y > height || this.Y < 0 || hitting === true){
             this.yvelocity *= -1;
         } 
         this.X += this.xvelocity;
@@ -24,6 +24,33 @@ var Ball = function(X, Y, R){
         strokeWeight(2);
         ellipse(this.X, this.Y, this.R, this.R);
     }
+    
+    this.hittingBrick = function(brik){
+        if(
+            this.X + this.R > brik.X &&
+            this.X < brik.X + brik.size &&
+            this.Y + this.R > brik.Y &&
+            this.Y < brik.Y + brik.size
+        ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    this.hittingPaddle = function(paddle){
+        if(
+            this.X + this.R > paddle.X &&
+            this.X < paddle.X + paddle.W &&
+            this.Y + this.R > paddle.Y &&
+            this.Y < paddle.Y + paddle.H
+        ){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }
 
 this.Paddle = function(X, Y, W, H){
@@ -88,27 +115,50 @@ function setup() {
     paddle = new Paddle(width/2, height-20, 120, 20);
 }
 
-function draw() {
-    background(255);
-    for(var i = 0; i<bricks.length; i++){
-        for(var j = 0; j<bricks[i].length; j++){
-            bricks[i][j].render();
-            // if(  ){
-            //     ball.move(true);
-            // } else {
-            //     ball.move(false);
-            // }
+function removeElement(array, element){
+    for(var i = 0; i<array.length; i++){
+        var index = array[i].indexOf(element);
+        if(index > -1){
+            array[i].splice(index, 1);
         }
     }
-    ball.move();
+
+}
+
+function checkCollisions(brik){
+    if(ball.hittingBrick(brik)){
+        removeElement(bricks, brik);
+        return true;
+    }
+    return false;
+}
+
+function draw() {
+    background(255);
+    
+    if(keyIsDown(RIGHT_ARROW)){
+        paddle.move(1);
+    } else if(keyIsDown(LEFT_ARROW)){
+        paddle.move(0);
+    }
+    var flag = false;
+    outer: 
+        for(var i = 0; i<bricks.length; i++){
+            for(var j = 0; j<bricks[i].length; j++){
+                bricks[i][j].render();
+                flag = checkCollisions(bricks[i][j]);
+                if(flag){
+                    break outer;
+                }
+            }
+    }
+    
+    if(ball.hittingPaddle(paddle)){
+        flag = true;
+    }
+    
+    ball.move(flag);
     ball.render();
     paddle.render();
 }
 
-function keyPressed(){
-    if(keyCode == RIGHT_ARROW){
-        paddle.move(1);
-    } else if(keyCode == LEFT_ARROW){
-        paddle.move(0);
-    }
-}
